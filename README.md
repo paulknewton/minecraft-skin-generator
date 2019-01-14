@@ -2,7 +2,7 @@
 
 Python tool to convert a photo to a Minecraft skin.
 
->>> What is it...?
+## What is it...?
 
 Minecraft allows users to create and customise their skins and use these in the Minecraft game.
 Each skin is defined as a bitmap with a specific format which is uploaded to the Minecraft server.
@@ -12,7 +12,7 @@ What I wanted was a way to choose a photo and have this 'wrapped' around my Mine
 This is the program I came up - a python script which processes a photo and outputs a Minecraft skin.
 
 
->>> How does it work...?
+## How does it work...?
 
 The script uses the PIL (Python Imaging Library) to load the photo and manipulate it.
 
@@ -26,7 +26,7 @@ Once we have built the entire set of mappings, the transformImage function build
 
 As an additional step, the program also generates a version of the skin in a more visual form (imagine unfolding a paper dice). This is not used directly, but can help check that the skin is correct before uploading it. Again, this is just created by building a reverse set of mappings (this time from the skin instead of the photo).
 
->>> How do I use it...?
+## How do I use it...?
 
 img2skin.py photo offsetX offsetY
 
@@ -36,7 +36,7 @@ The program creates 2 files:
 
 Then just upload the skin to Minecraft via the Minecraft web pages.
 
->>> Files
+## Files
 
 The main program is img2skin.py. A short helper library is in mylib.py
 There are some sample 'paint' colours to draw the legs, arms etc (lightGrey.png, darkGrey.png, blue.png, green.png). You can edit the program to change which body parts get painted with which colour. There is even a commented out line to paint all body parts in black (black.png). It's up to you.
