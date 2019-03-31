@@ -11,6 +11,17 @@ There are many online skin editors on the internet, but these all require you to
 What I wanted was a way to choose a photo and have this 'wrapped' around my Minecraft character.
 This is the program I came up with - a python script which processes a photo and outputs a Minecraft skin.
 
+For example, if you give it a photo like this:
+
+![pumpkin](pumpkin.jpg)
+
+the script will generate a Minecraft skin file like this:
+¨[pumpkin-skin](img/pumpkin-skin)
+
+If you load this into Minecraft, you will be able to run around looking like a pumpkin. Something like this:
+
+TODO
+
 
 ## How does it work...?
 
@@ -24,7 +35,7 @@ The main heavy lifting is done by the set of mappings. These tell the program wh
 
 Once we have built the entire set of mappings, the transformImage function builds a skin, using the mappings to cut out each body part.
 
-As an additional step, the program also generates a version of the skin in a more visual form (imagine unfolding a paper dice). This is not used directly, but can help check that the skin is correct before uploading it. Again, this is just created by building a reverse set of mappings (this time from the skin instead of the photo).
+As an additional step, the program also generates a version of the skin in a more visual form (imagine unfolding a paper dice). This is not used directly, but can help check that the skin is correct before uploading it. Again, this is just created by building a reverse set of mappings (this time from the skin instead of the photo). This is the main advantage of treating everything as a series of transformations.
 
 ## How do I use it...?
 
