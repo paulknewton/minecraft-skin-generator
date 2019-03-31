@@ -9,7 +9,7 @@ Each skin is defined as a bitmap with a specific format which is uploaded to the
 There are many online skin editors on the internet, but these all require you to painstakingly edit the skins - clicking each pixel, choosing a colour etc.
 
 What I wanted was a way to choose a photo and have this 'wrapped' around my Minecraft character.
-This is the program I came up - a python script which processes a photo and outputs a Minecraft skin.
+This is the program I came up with - a python script which processes a photo and outputs a Minecraft skin.
 
 
 ## How does it work...?
