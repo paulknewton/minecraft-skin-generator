@@ -16,7 +16,7 @@ For example, if you give it a photo like this:
 ![pumpkin](pumpkin.jpg)
 
 the script will generate a Minecraft skin file like this:
-¨[pumpkin-skin](img/pumpkin-skin)
+![pumpkin-skin](img/pumpkin-skin.png)
 
 If you load this into Minecraft, you will be able to run around looking like a pumpkin. Something like this:
 
