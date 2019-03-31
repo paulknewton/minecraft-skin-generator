@@ -1,4 +1,4 @@
-# img2skin
+# Minecraft Skin Generator
 
 Python tool to convert a photo to a Minecraft skin.
 
@@ -16,7 +16,7 @@ For example, if you give it a photo like this:
 ![pumpkin](pumpkin.jpg)
 
 the script will generate a Minecraft skin file like this:
-![pumpkin-skin](img/pumpkin-skin.png)
+![pumpkin-skin](pumpkin-skin.png)
 
 If you load this into Minecraft, you will be able to run around looking like a pumpkin. Something like this:
 
