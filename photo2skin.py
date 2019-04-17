@@ -1,6 +1,6 @@
 # Create a Minecraft skin from a photo.
 #
-# usage: img2skin.py photo offsetX offsetY
+# usage: photo2skin.py photo offsetX offsetY
 #
 # where:
 #      photo: filename of the photo to process
@@ -16,9 +16,9 @@ import sys
 import os
 from mylib import *
 
-logger = logging.getLogger('img2skin')
+logger = logging.getLogger('photo2skin')
 setupLogger(logger)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 # skin dimensions
 skinWidth = 64
@@ -96,14 +96,15 @@ def transformImage(imgWidth, imgHeight, background, mappings):
         toX, toY = toCoords
 
         logger.debug("Slicing " + xstr(part) + " from (" + xstr(fromX) + ", " + xstr(
-        fromY) + "),(" + xstr(fromX + width) + ", " + xstr(fromY + height) + ") to (" + xstr(toX) + ", " + xstr(toY) + ")")
+            fromY) + "),(" + xstr(fromX + width) + ", " + xstr(fromY + height) + ") to (" + xstr(toX) + ", " + xstr(
+            toY) + ")")
         clipboard = srcImg.crop((fromX, fromY, fromX + width, fromY + height))
         newImg.paste(clipboard, (toX, toY, toX + width, toY + height))
 
     return newImg
 
 
-def getPhotoCoords(partEntry):
+def getPhotoCoords(partEntry, photoOffsetX, photoOffsetY):
     # -1, -1 in the final coords means it cannot be mapped to the photo
     if partEntry[4] == -1:
         return None
@@ -116,26 +117,11 @@ def getSkinCoords(partEntry):
     return (partEntry[0], partEntry[1])
 
 
-if __name__ == "__main__":
-
-    # pass in command line arguments:
-    #      photo: filename of the photo to process
-    #      offsetX: horixontal pixels to start extracting the skin
-    #      offsetY: vertical pixels to start extracting the skin
-    if len(sys.argv) != 4:
-        print("usage: img2skin.py photo offsetX offsetY")
-        sys.exit()
-
-    # setup the filenames
-    photoFilename = sys.argv[1]
+def main(photoFilename, photoOffsetX, photoOffsetY):
     photoBasename = os.path.splitext(photoFilename)[0]
     photoSuffix = os.path.splitext(photoFilename)[1]
-    skinFilename = photoBasename + "-skin.png" # always use PNG (transparent)
-    photoFilename2 = photoBasename + "2" + photoSuffix
-
-    # used to shift the output in the target photo
-    photoOffsetX = int(sys.argv[2])
-    photoOffsetY = int(sys.argv[3])
+    skinFilename = photoBasename + "-skin.png"  # always use PNG (transparent)
+    photoFilename2 = photoBasename + "2.png"
 
     # open the reference images used to 'paint' body parts that are not available from the photo
     colours = {
@@ -150,12 +136,15 @@ if __name__ == "__main__":
     photo = Image.open(photoFilename)
 
     # resize the photo to match the skin size (keep the aspect ratio to avoid stretching)
-    logger.debug("Resizing the photo from " + xstr(photo.width) + "x" + xstr(photo.height) + " to " + xstr(skinWidth) + "x" + xstr(skinHeight))
     widthScale = photo.width / skinWidth
     heightScale = photo.height / skinHeight
     photoScale = min(widthScale, heightScale)
     logger.debug("Scaling factor = " + xstr(photoScale))
-    photo = photo.resize((photo.width / photoScale, photo.height / photoScale))
+
+    x = int(photo.width / photoScale)
+    y = int(photo.height / photoScale)
+    logger.info("Resizing the photo from %dx%d to %dx%d" % (photo.width, photo.height, x, y))
+    photo = photo.resize((x, y))
 
     # Build the mappings to build the skin from the photo
     # by reading the position of each body part in the photo, and finding the location
@@ -166,10 +155,10 @@ if __name__ == "__main__":
     # mapping entry (it is not always the photo - it is sometimes one of the reference images)
     mappingPhotoToSkin = {}
     for part in parts:
-        fromCoords = getPhotoCoords(parts[part])
+        fromCoords = getPhotoCoords(parts[part], photoOffsetX, photoOffsetY)
         if fromCoords is None:
             # cannot use photo, so need to select another colour
-            #colour = 'lightGrey'    # default (e.g. back)
+            # colour = 'lightGrey'    # default (e.g. back)
             colour = 'green'
             if 'Leg' in xstr(part):
                 colour = 'blue'
@@ -178,16 +167,17 @@ if __name__ == "__main__":
             if 'Bottom' in xstr(part):  # takes priority over leg/arm
                 colour = 'darkGrey'
             logger.debug("Painting " + xstr(part) + " with " + xstr(colour) + " because fromCoords are None")
-            fromImg = colours[colour] # uncomment this if you want textures
-            #fromImg = colours['black'] # uncomment this if you want black
-            fromCoords = (0,0)
+            fromImg = colours[colour]  # uncomment this if you want textures
+            # fromImg = colours['black'] # uncomment this if you want black
+            fromCoords = (0, 0)
 
         else:
             fromCoords = (fromCoords[0] + photoOffsetX, fromCoords[1] + photoOffsetY)
             fromImg = photo
 
         toCoords = getSkinCoords(parts[part])
-        mappingPhotoToSkin[xstr(part)] = [fromImg, parts[part][2] - parts[part][0], parts[part][3] - parts[part][1], fromCoords, toCoords]
+        mappingPhotoToSkin[xstr(part)] = [fromImg, parts[part][2] - parts[part][0], parts[part][3] - parts[part][1],
+                                          fromCoords, toCoords]
         logger.debug("Adding " + xstr(part) + ": " + xstr(mappingPhotoToSkin[xstr(part)]))
 
     # create the skin
@@ -201,17 +191,36 @@ if __name__ == "__main__":
     logger.info("Converting skin '" + skinFilename + "' back to photo '" + photoFilename2 + "'")
     mappingSkinToPhoto = {}
     for part in parts:
-        toCoords = getPhotoCoords(parts[part])
+        toCoords = getPhotoCoords(parts[part], photoOffsetX, photoOffsetY)
         if toCoords is None:
             # if the body part doesn't appear on the photo, just skip it (no need to 'paint it' as before
             logger.debug("Skipping " + xstr(part) + " because toCoords are None")
             continue
 
         fromCoords = getSkinCoords(parts[part])
-        mappingSkinToPhoto[xstr(part)] = [skin, parts[part][2] - parts[part][0], parts[part][3] - parts[part][1], fromCoords, toCoords]
+        mappingSkinToPhoto[xstr(part)] = [skin, parts[part][2] - parts[part][0], parts[part][3] - parts[part][1],
+                                          fromCoords, toCoords]
         logger.debug("Adding " + xstr(part) + ": " + xstr(mappingSkinToPhoto[xstr(part)]))
 
     photo = transformImage(skin.width, skin.height, 'white', mappingSkinToPhoto)
-    photo.save(photoBasename + '2' + '.png')
+    photo.save(photoFilename2)
 
 
+if __name__ == "__main__":
+
+    # pass in command line arguments:
+    #      photo: filename of the photo to process
+    #      offsetX: horixontal pixels to start extracting the skin
+    #      offsetY: vertical pixels to start extracting the skin
+    if len(sys.argv) != 4:
+        print("usage: photo2skin.py photo offsetX offsetY")
+        sys.exit()
+
+    # setup the filenames
+    photoFilename = sys.argv[1]
+
+    # used to shift the output in the target photo
+    photoOffsetX = int(sys.argv[2])
+    photoOffsetY = int(sys.argv[3])
+
+    main(photoFilename, photoOffsetX, photoOffsetY)
