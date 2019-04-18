@@ -38,8 +38,22 @@ Once we have built the entire set of mappings, the transformImage function build
 As an additional step, the program also generates a version of the skin in a more visual form (imagine unfolding a paper dice). This is not used directly, but can help check that the skin is correct before uploading it. Again, this is just created by building a reverse set of mappings (this time from the skin instead of the photo). This is the main advantage of treating everything as a series of transformations.
 
 ## How do I use it...?
-Just give the program a photo to use, and add the x, y offset where to start:
+Just give the program a photo to use, and add the x, y offset where to start.
+```
+usage: photo2skin.py [-h] [-x OFFSET_X] [-y OFFSET_Y] photo_filename
 
+Create a Minecraft skin from a photo.
+
+positional arguments:
+  photo_filename  filename of the photo to process
+
+optional arguments:
+  -h, --help      show this help message and exit
+  -x OFFSET_X     horizontal offset in photo
+  -y OFFSET_Y     vertical offset in photo
+```
+
+For example:
 ```
 python photo2skin.py photo.jpg 3 5
 ```
