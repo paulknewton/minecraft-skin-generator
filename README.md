@@ -38,18 +38,24 @@ Once we have built the entire set of mappings, the transformImage function build
 As an additional step, the program also generates a version of the skin in a more visual form (imagine unfolding a paper dice). This is not used directly, but can help check that the skin is correct before uploading it. Again, this is just created by building a reverse set of mappings (this time from the skin instead of the photo). This is the main advantage of treating everything as a series of transformations.
 
 ## How do I use it...?
+Just give the program a photo to use, and add the x, y offset where to start:
 
-img2skin.py photo offsetX offsetY
+```
+python photo2skin.py photo.jpg 3 5
+```
 
 The program creates 2 files:
-    photo-skin.png - the skin to upload
-    photo2 - a flattenned version of the skin showing the piece of the photo that has been used
+* photo-skin.png - the skin to upload
+* photo-thumb.png - a flattenned version of the skin showing the piece of the photo that has been used
 
 Then just upload the skin to Minecraft via the Minecraft web pages.
 
 ## Files
 
-The main program is img2skin.py. A short helper library is in mylib.py
-There are some sample 'paint' colours to draw the legs, arms etc (lightGrey.png, darkGrey.png, blue.png, green.png). You can edit the program to change which body parts get painted with which colour. There is even a commented out line to paint all body parts in black (black.png). It's up to you.
+* The main program is photo2skin.py.
+* A short helper library is in mylib.py
+* There are some sample 'paint' colours to draw the legs, arms etc (lightGrey.png, darkGrey.png, blue.png, green.png). You can edit the program to change which body parts get painted with which colour. There is even a commented out line to paint all body parts in black (black.png). It's up to you.
+
+Run the unit tests in test_photo2skin.py using pytest.
 
 Enjoy!!!
