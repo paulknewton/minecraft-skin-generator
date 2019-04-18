@@ -223,9 +223,10 @@ if __name__ == "__main__":
     # read command-line args
     parser = argparse.ArgumentParser(description="Create a Minecraft skin from a photo.")
     parser.add_argument("photo_filename", help="filename of the photo to process")
-    parser.add_argument("offset_x", help="horizontal offset in photo", type=int)
-    parser.add_argument("offset_y", help="vertical offset in photo", type=int)
+    parser.add_argument("-x", dest="offset_x", help="horizontal offset in photo", type=int, default=0)
+    parser.add_argument("-y", dest="offset_y", help="vertical offset in photo", type=int, default=0)
     args = parser.parse_args()
+    print(args)
 
     photo_filename = args.photo_filename
     photo_basename = os.path.splitext(photo_filename)[0]
