@@ -13,7 +13,7 @@ This is the program I came up with - a python script which processes a photo and
 
 For example, if you give it a photo like this:
 
-![pumpkin](pumpkin.jpg)
+![pumpkin](pumpkin-small.jpg)
 
 the script will generate a Minecraft skin file like this:
 ![pumpkin-skin](pumpkin-skin.png)
