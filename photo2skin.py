@@ -117,11 +117,8 @@ def getSkinCoords(partEntry):
     return (partEntry[0], partEntry[1])
 
 
-def main(photoFilename, photoOffsetX, photoOffsetY):
-    photoBasename = os.path.splitext(photoFilename)[0]
-    photoSuffix = os.path.splitext(photoFilename)[1]
-    skinFilename = photoBasename + "-skin.png"  # always use PNG (transparent)
-    photoFilename2 = photoBasename + "2.png"
+def build_skin(photoFilename, photoOffsetX, photoOffsetY):
+    """Build a minecraft skin and a thumbnail from the provided photo image."""
 
     # open the reference images used to 'paint' body parts that are not available from the photo
     colours = {
@@ -132,7 +129,7 @@ def main(photoFilename, photoOffsetX, photoOffsetY):
         'black': Image.open('black.png')
     }
 
-    logger.info("Converting photo '" + photoFilename + "' to skin '" + skinFilename + "'...")
+    logger.info("Converting photo '" + photoFilename + "' to skin...")
     photo = Image.open(photoFilename)
 
     # resize the photo to match the skin size (keep the aspect ratio to avoid stretching)
@@ -182,13 +179,12 @@ def main(photoFilename, photoOffsetX, photoOffsetY):
 
     # create the skin
     skin = transformImage(64, 64, None, mappingPhotoToSkin)
-    skin.save(skinFilename)
     photo.close()
 
     # Now build a photo of the skin by applying the transformation with the mappings/source image reversed.
     # This is useful to visualise how the skin will look when uploaded to Minecraft.
     # The photo is the skin unwrapped (e.g. head top unfolds at the top, back arms on the left/right etc).
-    logger.info("Converting skin '" + skinFilename + "' back to photo '" + photoFilename2 + "'")
+    logger.info("Converting skin back to photo...")
     mappingSkinToPhoto = {}
     for part in parts:
         toCoords = getPhotoCoords(parts[part], photoOffsetX, photoOffsetY)
@@ -203,7 +199,8 @@ def main(photoFilename, photoOffsetX, photoOffsetY):
         logger.debug("Adding " + xstr(part) + ": " + xstr(mappingSkinToPhoto[xstr(part)]))
 
     photo = transformImage(skin.width, skin.height, 'white', mappingSkinToPhoto)
-    photo.save(photoFilename2)
+
+    return (skin, photo)
 
 
 if __name__ == "__main__":
@@ -223,4 +220,12 @@ if __name__ == "__main__":
     photoOffsetX = int(sys.argv[2])
     photoOffsetY = int(sys.argv[3])
 
-    main(photoFilename, photoOffsetX, photoOffsetY)
+    skin, thumbnail = build_skin(photoFilename, photoOffsetX, photoOffsetY)
+
+    photoBasename = os.path.splitext(photoFilename)[0]
+    photoSuffix = os.path.splitext(photoFilename)[1]
+    skinFilename = photoBasename + "-skin.png"  # always use PNG (transparent)
+    photoFilename2 = photoBasename + "2.png"
+
+    skin.save(skinFilename)
+    photo.save(photoFilename2)

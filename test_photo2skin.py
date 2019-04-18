@@ -8,9 +8,9 @@ def test_it():
 
 def test_missing_file():
     with pytest.raises(FileNotFoundError) as e:
-        photo2skin.main("this_file_does_not_exist.jpg", 0, 0)
+        photo2skin.build_skin("this_file_does_not_exist.jpg", 0, 0)
 
 
 def test_existing_file():
-    photo2skin.main("test.jpg", 0, 0)
+    photo2skin.build_skin("test.jpg", 0, 0)
     assert True
