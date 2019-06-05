@@ -21,7 +21,7 @@ the script will generate a Minecraft skin file like this:
 
 If you load this into Minecraft, you will be able to run around looking like a pumpkin. Something like this:
 
-TODO
+![minecraft](minecraft.jpg)
 
 
 ## How does it work...?
