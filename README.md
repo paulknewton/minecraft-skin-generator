@@ -1,4 +1,7 @@
 [![Build Status](https://travis-ci.org/paulknewton/minecraft-skin-generator.svg?branch=master)](https://travis-ci.org/paulknewton/minecraft-skin-generator)
+
+[![DeepSource](https://static.deepsource.io/deepsource-badge-light.svg)](https://deepsource.io/gh/paulknewton/minecraft-skin-generator/?ref=repository-badge)
+
 # Minecraft Skin Generator
 
 Python tool to convert a photo to a Minecraft skin.
