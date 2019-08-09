@@ -4,7 +4,7 @@ from PIL import Image, ImageChops
 
 
 def test_missing_file():
-    with pytest.raises(FileNotFoundError) as e:
+    with pytest.raises(FileNotFoundError):
         photo2skin.build_skin("tests/this_file_does_not_exist.jpg", 0, 0)
 
 
