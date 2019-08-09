@@ -1,4 +1,5 @@
-"""usage: photo2skin.py [-h] photo_filename offset_x offset_y
+"""
+usage: photo2skin.py [-h] photo_filename offset_x offset_y
 
 Create a Minecraft skin from a photo.
 
@@ -8,17 +9,17 @@ positional arguments:
   offset_y        vertical offset in photo
 
 optional arguments:
-  -h, --help      show this help message and exit"""
-
+  -h, --help      show this help message and exit
+"""
 import argparse
 import os
-
 from PIL import Image
-
-from mylib import *
+import logging
+import mylib
+from mylib import xstr
 
 logger = logging.getLogger('photo2skin')
-setupLogger(logger)
+mylib.setupLogger(logger)
 logger.setLevel(logging.INFO)
 
 # skin dimensions
@@ -142,7 +143,8 @@ def build_skin(photo_filename, photo_offset_x, photo_offset_y):
         'black': Image.open('black.png')
     }
 
-    logger.info("Converting photo '" + photo_filename + "' to skin with offset (%d, %d)" % (photo_offset_x, photo_offset_y))
+    logger.info(
+        "Converting photo '" + photo_filename + "' to skin with offset (%d, %d)" % (photo_offset_x, photo_offset_y))
     photo = Image.open(photo_filename)
 
     # resize the photo to match the skin size (keep the aspect ratio to avoid stretching)
@@ -219,7 +221,6 @@ def build_thumbnail(skin, photo_offset_x, photo_offset_y):
 
 
 if __name__ == "__main__":
-
     # read command-line args
     parser = argparse.ArgumentParser(description="Create a Minecraft skin from a photo.")
     parser.add_argument("photo_filename", help="filename of the photo to process")
