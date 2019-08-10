@@ -78,12 +78,11 @@ def transform_image(new_width, new_height, background, mappings):
     new_img = Image.new('RGBA', (new_width, new_height), background)
 
     for part in mappings:
-        logger.debug("Processing mapping: " + xstr(mappings[part]))
+        logger.debug("Processing mapping: %s", xstr(mappings[part]))
         src_img, width, height, (from_x, from_y), (to_x, to_y) = mappings[part]
 
-        logger.debug("Slicing " + xstr(part) + " from (" + xstr(from_x) + ", " + xstr(
-            from_y) + "),(" + xstr(from_x + width) + ", " + xstr(from_y + height) + ") to (" + xstr(to_x) + ", " + xstr(
-            to_y) + ")")
+        logger.debug("Slicing %s from (%d, %d),(%d, %d) to (%d, %d)",
+                     xstr(part), from_x, from_y, from_x + width, from_y + height, to_x, to_y)
         clipboard = src_img.crop((from_x, from_y, from_x + width, from_y + height))
         new_img.paste(clipboard, (to_x, to_y, to_x + width, to_y + height))
 
@@ -138,17 +137,16 @@ def build_skin(photo_filename, photo_offset_x, photo_offset_y):
         'black': Image.open(IMG_FOLDER + '/black.png')
     }
 
-    logger.info(
-        "Converting photo '" + photo_filename + "' to skin with offset (%d, %d)" % (photo_offset_x, photo_offset_y))
+    logger.info("Converting photo '%s' to skin with offset (%d, %d)", photo_filename, photo_offset_x, photo_offset_y)
     photo = Image.open(photo_filename)
 
     # resize the photo to match the skin size (keep the aspect ratio to avoid stretching)
     photo_scale = min(photo.width / SKIN_WIDTH, photo.height / SKIN_HEIGHT)
-    logger.debug("Scaling factor = " + xstr(photo_scale))
+    logger.debug("Scaling factor = %f", photo_scale)
 
     x = int(photo.width / photo_scale)
     y = int(photo.height / photo_scale)
-    logger.info("Resizing the photo from %dx%d to %dx%d" % (photo.width, photo.height, x, y))
+    logger.info("Resizing the photo from %dx%d to %dx%d", photo.width, photo.height, x, y)
     photo = photo.resize((x, y))
 
     # Build the mappings to build the skin from the photo
@@ -171,7 +169,7 @@ def build_skin(photo_filename, photo_offset_x, photo_offset_y):
                 colour = 'green'
             if 'Bottom' in xstr(part):  # takes priority over leg/arm
                 colour = 'darkGrey'
-            logger.debug("Painting " + xstr(part) + " with " + xstr(colour) + " because from_coords are None")
+            logger.debug("Painting %s with %s because from_coords are None", xstr(part), xstr(colour))
             from_img = colours[colour]  # uncomment this if you want textures
             # from_img = colours['black'] # uncomment this if you want black
             from_coords = (0, 0)
@@ -183,7 +181,7 @@ def build_skin(photo_filename, photo_offset_x, photo_offset_y):
         to_coords = get_skin_coords(parts[part])
         mapping_photo_to_skin[xstr(part)] = [from_img, parts[part][2] - parts[part][0], parts[part][3] - parts[part][1],
                                              from_coords, to_coords]
-        logger.debug("Adding " + xstr(part) + ": " + xstr(mapping_photo_to_skin[xstr(part)]))
+        logger.debug("Adding %s: %s", xstr(part), xstr(mapping_photo_to_skin[xstr(part)]))
 
     # create the skin
     new_skin = transform_image(64, 64, None, mapping_photo_to_skin)
@@ -209,13 +207,13 @@ def build_thumbnail(source_skin, photo_offset_x, photo_offset_y):
         to_coords = get_photo_coords(parts[part], photo_offset_x, photo_offset_y)
         if to_coords is None:
             # if the body part doesn't appear on the photo, just skip it (no need to 'paint it' as before
-            logger.debug("Skipping " + xstr(part) + " because to_coords are None")
+            logger.debug("Skipping %s because to_coords are None", xstr(part))
             continue
 
         from_coords = get_skin_coords(parts[part])
         mapping_skin_to_photo[xstr(part)] = [source_skin, parts[part][2] - parts[part][0],
                                              parts[part][3] - parts[part][1], from_coords, to_coords]
-        logger.debug("Adding " + xstr(part) + ": " + xstr(mapping_skin_to_photo[xstr(part)]))
+        logger.debug("Adding %s: %s", xstr(part), xstr(mapping_skin_to_photo[xstr(part)]))
 
     photo = transform_image(source_skin.width, source_skin.height, 'white', mapping_skin_to_photo)
 
@@ -236,10 +234,10 @@ if __name__ == "__main__":
 
     skin = build_skin(args.photo_filename, args.offset_x, args.offset_y)
     skin_filename = photo_basename + "-skin.png"
-    logger.info("Saving skin as %s" % skin_filename)
+    logger.info("Saving skin as %s", skin_filename)
     skin.save(skin_filename)  # always use PNG (transparent)
 
     thumbnail = build_thumbnail(skin, args.offset_x, args.offset_y)
     thumb_filename = photo_basename + "-thumb.png"
-    logger.info("Saving thumbnail as %s" % thumb_filename)
+    logger.info("Saving thumbnail as %s", thumb_filename)
     thumbnail.save(thumb_filename)
