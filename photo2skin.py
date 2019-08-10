@@ -72,8 +72,7 @@ def transform_image(new_width, new_height, background, mappings):
     :param new_width: width of the new image
     :param new_height: height of the new image
     :param background: colour of new image (None is transparent)
-    :param mappings: a dictionary of mappings of the form:
-            key: [ sourceImage, widthToGrab, heightToGrab, fromTopLeftX, fromTopLeftY, toTopLeftX, toTopLeftY]
+    :param mappings: a dictionary of mappings of the form key: [ sourceImage, widthToGrab, heightToGrab, fromTopLeftX, fromTopLeftY, toTopLeftX, toTopLeftY]
      :return the new Image
      """
     new_img = Image.new('RGBA', (new_width, new_height), background)
@@ -104,9 +103,9 @@ def get_photo_coords(part_entry, photo_offset_x, photo_offset_y):
     # -1, -1 in the final coords means it cannot be mapped to the photo
     if part_entry[4] == -1:
         return None
-    else:
-        # apply the offset values
-        return part_entry[4] + photo_offset_x, part_entry[5] + photo_offset_y
+
+    # apply the offset values
+    return part_entry[4] + photo_offset_x, part_entry[5] + photo_offset_y
 
 
 def get_skin_coords(part_entry):
