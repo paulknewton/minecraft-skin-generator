@@ -26,6 +26,9 @@ logger.setLevel(logging.INFO)
 SKIN_WIDTH = 64
 SKIN_HEIGHT = 64
 
+# location of images for arms, legs etc
+IMG_FOLDER = "lib"
+
 # These are the co-ordinates of the different body parts in a Minecraft skin and the corresponding
 # position in a photo.
 # The format of the dictionary is not the same as that used by the transformation functions,
@@ -136,11 +139,11 @@ def build_skin(photo_filename, photo_offset_x, photo_offset_y):
 
     # open the reference images used to 'paint' body parts that are not available from the photo
     colours = {
-        'lightGrey': Image.open('lightGrey.png'),
-        'darkGrey': Image.open('darkGrey.png'),
-        'blue': Image.open('blue.png'),
-        'green': Image.open('green.png'),
-        'black': Image.open('black.png')
+        'lightGrey': Image.open(IMG_FOLDER + '/lightGrey.png'),
+        'darkGrey': Image.open(IMG_FOLDER + '/darkGrey.png'),
+        'blue': Image.open(IMG_FOLDER + '/blue.png'),
+        'green': Image.open(IMG_FOLDER + '/green.png'),
+        'black': Image.open(IMG_FOLDER + '/black.png')
     }
 
     logger.info(
