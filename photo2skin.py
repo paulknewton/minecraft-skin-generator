@@ -73,8 +73,8 @@ def transform_image(new_width, new_height, background, mappings):
     :param new_height: height of the new image
     :param background: colour of new image (None is transparent)
     :param mappings: a dictionary of mappings of the form key: [ sourceImage, widthToGrab, heightToGrab, fromTopLeftX, fromTopLeftY, toTopLeftX, toTopLeftY]
-     :return the new Image
-     """
+    :return the new Image
+    """
     new_img = Image.new('RGBA', (new_width, new_height), background)
 
     for part in mappings:
