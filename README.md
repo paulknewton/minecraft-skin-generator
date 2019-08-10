@@ -18,14 +18,14 @@ This is the program I came up with - a python script which processes a photo and
 
 For example, if you give it a photo like this:
 
-![pumpkin](pumpkin-small.jpg)
+![pumpkin](img/pumpkin-small.jpg)
 
 the script will generate a Minecraft skin file like this:
-![pumpkin-skin](pumpkin-skin.png)
+![pumpkin-skin](img/pumpkin-skin.png)
 
 If you load this into Minecraft, you will be able to run around looking like a pumpkin. Something like this:
 
-![minecraft](minecraft.jpg)
+![minecraft](img/minecraft.jpg)
 
 
 ## How does it work...?
