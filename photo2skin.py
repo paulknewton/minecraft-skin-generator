@@ -1,16 +1,3 @@
-"""
-usage: photo2skin.py [-h] photo_filename offset_x offset_y
-
-Create a Minecraft skin from a photo.
-
-positional arguments:
-  photo_filename  filename of the photo to process
-  offset_x        horizontal offset in photo
-  offset_y        vertical offset in photo
-
-optional arguments:
-  -h, --help      show this help message and exit
-"""
 import argparse
 import os
 from PIL import Image
@@ -18,8 +5,8 @@ import logging
 import mylib
 from mylib import xstr
 
-logger = logging.getLogger('photo2skin')
-mylib.setupLogger(logger)
+logger = logging.getLogger(__name__)
+mylib.setup_logger(logger)
 logger.setLevel(logging.INFO)
 
 # skin dimensions
@@ -79,18 +66,15 @@ parts = {
 
 
 def transform_image(new_width, new_height, background, mappings):
-    """Create a new image based on the supplied mappings. Helper function to build images photo > skin > thumbnail
+    """
+    Create a new image based on the supplied mappings. Helper function to build images photo > skin > thumbnail
 
-     Args:
-         new_width: width of the new image
-         new_height: height of the new image
-         background: colour of new image (None is transparent)
-         mappings: a dictionary of mappings of the form:
+    :param new_width: width of the new image
+    :param new_height: height of the new image
+    :param background: colour of new image (None is transparent)
+    :param mappings: a dictionary of mappings of the form:
             key: [ sourceImage, widthToGrab, heightToGrab, fromTopLeftX, fromTopLeftY, toTopLeftX, toTopLeftY]
-     Returns:
-         the new image
-     Raises:
-
+     :return the new Image
      """
     new_img = Image.new('RGBA', (new_width, new_height), background)
 
@@ -108,34 +92,43 @@ def transform_image(new_width, new_height, background, mappings):
 
 
 def get_photo_coords(part_entry, photo_offset_x, photo_offset_y):
-    """Get the matching co-ordinates in the photo for a given body part.
+    """
+    Get the matching co-ordinates in the photo for a given body part.
 
-    Args:
-        part_entry - the entry for a body part of the form [skin-topLeftX, skin-topLeftY, skin-bottomRightX, skin-bottomRightY, photo-topLeftX, photo-topLeftY]
-        photo_offset_x - horizontal offset to shift the photo
-        photo_offset_y - vertical offset to shift the photo
-    Returns:
-        tuple of x,y co-ordinates
+    :param part_entry: the entry for a body part of the form [skin-topLeftX, skin-topLeftY, skin-bottomRightX,
+            skin-bottomRightY, photo-topLeftX, photo-topLeftY]
+    :param photo_offset_x: horizontal offset to shift the photo
+    :param photo_offset_y: vertical offset to shift the photo Returns: tuple of x,y co-ordinates
+    :return co-ordinates in the photo of the form (x, y)
     """
     # -1, -1 in the final coords means it cannot be mapped to the photo
     if part_entry[4] == -1:
         return None
     else:
         # apply the offset values
-        return (part_entry[4] + photo_offset_x, part_entry[5] + photo_offset_y)
+        return part_entry[4] + photo_offset_x, part_entry[5] + photo_offset_y
 
 
 def get_skin_coords(part_entry):
-    """Get the matching co-ordinates in the photo for a given body part.
-
-    Args:
-        part_entry - the entry for a body part of the form [skin-topLeftX, skin-topLeftY, skin-bottomRightX, skin-bottomRightY, photo-topLeftX, photo-topLeftY]
     """
-    return (part_entry[0], part_entry[1])
+    Get the matching co-ordinates in the photo for a given body part.
+
+    :param part_entry: the entry for a body part of the form [skin-topLeftX, skin-topLeftY, skin-bottomRightX,
+        skin-bottomRightY, photo-topLeftX, photo-topLeftY]
+    :return co-ordinates in the skin of the form (x, y)
+    """
+    return part_entry[0], part_entry[1]
 
 
 def build_skin(photo_filename, photo_offset_x, photo_offset_y):
-    """Build a minecraft skin and a thumbnail from the provided photo image."""
+    """
+    Build a minecraft skin and a thumbnail from the provided photo image.
+
+    :param photo_filename: the source photo
+    :param photo_offset_x: x-offset to start building the skin
+    :param photo_offset_y: y-offset to start building the skin
+    :return a new Image of the skin
+    """
 
     # open the reference images used to 'paint' body parts that are not available from the photo
     colours = {
@@ -151,11 +144,11 @@ def build_skin(photo_filename, photo_offset_x, photo_offset_y):
     photo = Image.open(photo_filename)
 
     # resize the photo to match the skin size (keep the aspect ratio to avoid stretching)
-    photoScale = min(photo.width / SKIN_WIDTH, photo.height / SKIN_HEIGHT)
-    logger.debug("Scaling factor = " + xstr(photoScale))
+    photo_scale = min(photo.width / SKIN_WIDTH, photo.height / SKIN_HEIGHT)
+    logger.debug("Scaling factor = " + xstr(photo_scale))
 
-    x = int(photo.width / photoScale)
-    y = int(photo.height / photoScale)
+    x = int(photo.width / photo_scale)
+    y = int(photo.height / photo_scale)
     logger.info("Resizing the photo from %dx%d to %dx%d" % (photo.width, photo.height, x, y))
     photo = photo.resize((x, y))
 
@@ -194,17 +187,24 @@ def build_skin(photo_filename, photo_offset_x, photo_offset_y):
         logger.debug("Adding " + xstr(part) + ": " + xstr(mapping_photo_to_skin[xstr(part)]))
 
     # create the skin
-    skin = transform_image(64, 64, None, mapping_photo_to_skin)
+    new_skin = transform_image(64, 64, None, mapping_photo_to_skin)
     photo.close()
 
-    return skin
+    return new_skin
 
 
-def build_thumbnail(skin, photo_offset_x, photo_offset_y):
-    # Now build a photo of the skin by applying the transformation with the mappings/source image reversed.
-    # This is useful to visualise how the skin will look when uploaded to Minecraft.
-    # The photo is the skin unwrapped (e.g. head top unfolds at the top, back arms on the left/right etc).
-    logger.info("Converting skin back to photo...")
+def build_thumbnail(source_skin, photo_offset_x, photo_offset_y):
+    """
+    Build a photo of the source_skin by applying the transformation with the mappings/source image reversed.
+    This is useful to visualise how the source_skin will look when uploaded to Minecraft.
+    The photo is the source_skin unwrapped (e.g. head top unfolds at the top, back arms on the left/right etc).
+
+    :param source_skin: Image representing the skin
+    :param photo_offset_x: x-offset to start creating the photo
+    :param photo_offset_y: y-offset to start creating the photo
+    :return an Image representing the thumbnail
+    """
+    logger.info("Converting source_skin back to photo...")
     mapping_skin_to_photo = {}
     for part in parts:
         to_coords = get_photo_coords(parts[part], photo_offset_x, photo_offset_y)
@@ -214,11 +214,11 @@ def build_thumbnail(skin, photo_offset_x, photo_offset_y):
             continue
 
         from_coords = get_skin_coords(parts[part])
-        mapping_skin_to_photo[xstr(part)] = [skin, parts[part][2] - parts[part][0], parts[part][3] - parts[part][1],
-                                             from_coords, to_coords]
+        mapping_skin_to_photo[xstr(part)] = [source_skin, parts[part][2] - parts[part][0],
+                                             parts[part][3] - parts[part][1], from_coords, to_coords]
         logger.debug("Adding " + xstr(part) + ": " + xstr(mapping_skin_to_photo[xstr(part)]))
 
-    photo = transform_image(skin.width, skin.height, 'white', mapping_skin_to_photo)
+    photo = transform_image(source_skin.width, source_skin.height, 'white', mapping_skin_to_photo)
 
     return photo
 
@@ -232,11 +232,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
     print(args)
 
-    photo_filename = args.photo_filename
-    photo_basename = os.path.splitext(photo_filename)[0]
-    photo_suffix = os.path.splitext(photo_filename)[1]
+    photo_basename = os.path.splitext(args.photo_filename)[0]
+    photo_suffix = os.path.splitext(args.photo_filename)[1]
 
-    skin = build_skin(photo_filename, args.offset_x, args.offset_y)
+    skin = build_skin(args.photo_filename, args.offset_x, args.offset_y)
     skin_filename = photo_basename + "-skin.png"
     logger.info("Saving skin as %s" % skin_filename)
     skin.save(skin_filename)  # always use PNG (transparent)
