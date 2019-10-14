@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/paulknewton/minecraft_skin_generator.svg?branch=master)](https://travis-ci.org/paulknewton/minecraft_skin_generator)
 [![codecov](https://codecov.io/gh/paulknewton/minecraft_skin_generator/branch/master/graph/badge.svg)](https://codecov.io/gh/paulknewton/minecraft_skin_generator)
+[![pyup](https://pyup.io/repos/github/paulknewton/minecraft_skin_generator/shield.svg)](https://pyup.io/account/repos/github/paulknewton/fritzbox_monitor)
+[![python3](https://pyup.io/repos/github/paulknewton/minecraft_skin_generator/python-3-shield.svg)](https://pyup.io/account/repos/github/paulknewton/fritzbox_monitor)
 
 [![DeepSource](https://static.deepsource.io/deepsource-badge-light.svg)](https://deepsource.io/gh/paulknewton/minecraft_skin_generator/?ref=repository-badge)
 
@@ -43,7 +45,17 @@ Once we have built the entire set of mappings, the transformImage function build
 As an additional step, the program also generates a version of the skin in a more visual form (imagine unfolding a paper dice). This is not used directly, but can help check that the skin is correct before uploading it. Again, this is just created by building a reverse set of mappings (this time from the skin instead of the photo). This is the main advantage of treating everything as a series of transformations.
 
 ## How do I use it...?
-Just give the program a photo to use, and add the x, y offset where to start.
+The program uses the ```Pillow``` imaging module. Start by installing this:
+```
+pip3 install -r requirements.txt
+```
+
+The unit tests use ```pytest``` so install this as well:
+```
+pip3 install -r requirements_dev.txt
+```
+
+Then just give the program a photo to use, and add the x, y offset where to start.
 ```
 usage: photo2skin.py [-h] [-x OFFSET_X] [-y OFFSET_Y] photo_filename
 
