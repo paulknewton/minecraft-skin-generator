@@ -1,9 +1,9 @@
-[![Build Status](https://travis-ci.org/paulknewton/minecraft_skin_generator.svg?branch=master)](https://travis-ci.org/paulknewton/minecraft_skin_generator)
-[![codecov](https://codecov.io/gh/paulknewton/minecraft_skin_generator/branch/master/graph/badge.svg)](https://codecov.io/gh/paulknewton/minecraft_skin_generator)
-[![pyup](https://pyup.io/repos/github/paulknewton/minecraft_skin_generator/shield.svg)](https://pyup.io/account/repos/github/paulknewton/minecraft_skin_generator)
-[![python3](https://pyup.io/repos/github/paulknewton/minecraft_skin_generator/python-3-shield.svg)](https://pyup.io/account/repos/github/paulknewton/minecraft_skin_generator)
+[![Build Status](https://travis-ci.org/paulknewton/minecraft-skin-generator.svg?branch=master)](https://travis-ci.org/paulknewton/minecraft-skin-generator)
+[![codecov](https://codecov.io/gh/paulknewton/minecraft-skin-generator/branch/master/graph/badge.svg)](https://codecov.io/gh/paulknewton/minecraft-skin-generator)
+[![pyup](https://pyup.io/repos/github/paulknewton/minecraft-skin-generator/shield.svg)](https://pyup.io/account/repos/github/paulknewton/minecraft-skin-generator)
+[![python3](https://pyup.io/repos/github/paulknewton/minecraft-skin-generator/python-3-shield.svg)](https://pyup.io/account/repos/github/paulknewton/minecraft-skin-generator)
 
-[![DeepSource](https://static.deepsource.io/deepsource-badge-light.svg)](https://deepsource.io/gh/paulknewton/minecraft_skin_generator/?ref=repository-badge)
+[![DeepSource](https://static.deepsource.io/deepsource-badge-light.svg)](https://deepsource.io/gh/paulknewton/minecraft-skin-generator/?ref=repository-badge)
 
 # Minecraft Skin Generator
 
